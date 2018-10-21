@@ -67,15 +67,30 @@ Example usages:
 salmon.sh > encrypted_text
 salmon.sh < encrypted_text | less
 tar -c --lzma -f - secret_folder/ | salmon.sh > encrypted.tar.lzma
+
+You may optionally supply a nonce as the only command line argument, as in:
+tar -c --lzma -f - secret_folder/ | salmon.sh 0123456789ABCDEF0123456789ABCDEF > encrypted-0123456789ABCDEF0123456789ABCDEF.tar.lzma
 EOF
     exit 3
 fi
 
-cat 1>&2 <<EOF
+NONCE=""
+if ! [ x"$1" = x ]; then
+    NONCE="$1"
+    if [ $(echo "$NONCE" | wc -c) -ne 33 ] \
+           || (echo "$NONCE" | grep -q '[^0-9A-Fa-f]'); then
+        cat 1>&2 <<EOF
+The nonce you provided was invalid. A nonce must consist of exactly 32
+hexadecimal digits.
+EOF
+        exit 4
+    fi
+else
+    cat 1>&2 <<EOF
 Are you decrypting? If so, paste the nonce here and press enter. If not, just
 press enter.
 EOF
-NONCE=""
+fi
 while [ x"$NONCE" = x ]; do
     NONCE=$(head -n 1 <&2)
     if [ x"$NONCE" = x ]; then
