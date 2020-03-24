@@ -66,10 +66,10 @@ Example usages:
 
 salmon.sh > encrypted_text
 salmon.sh < encrypted_text | less
-tar -c --lzma -f - secret_folder/ | salmon.sh > encrypted.tar.lzma
+tar -c --lzip -f - secret_folder/ | salmon.sh > encrypted.tar.lzip
 
 You may optionally supply a nonce as the only command line argument, as in:
-tar -c --lzma -f - secret_folder/ | salmon.sh 0123456789ABCDEF0123456789ABCDEF > encrypted-0123456789ABCDEF0123456789ABCDEF.tar.lzma
+tar -c --lzip -f - secret_folder/ | salmon.sh 0123456789ABCDEF0123456789ABCDEF > encrypted-0123456789ABCDEF0123456789ABCDEF.tar.lzip
 EOF
     exit 3
 fi
